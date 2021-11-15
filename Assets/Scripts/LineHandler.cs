@@ -65,6 +65,11 @@ public class LineHandler : MonoBehaviour
                 RenderKDTree(tree, new Vector2(-10, 10), new Vector2(10, -10));
                 break;
 
+            case GeometryType.DelaunayTriang:
+                var delTriangLines = DelaunayTriangulation.Triangulate(inputHandler.GetPoints());
+                RenderLines(delTriangLines);
+                break;
+
             case GeometryType.Off:
             default:
                 ClearAllLines();

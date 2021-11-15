@@ -13,6 +13,7 @@ public enum GeometryType
     TriangHull,
     TriangPolygon,
     KDTree,
+    DelaunayTriang,
     Off
 }
 
@@ -131,6 +132,10 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
         {
             newGeometryType = swapGeometryTypes(GeometryType.KDTree);
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            newGeometryType = swapGeometryTypes(GeometryType.DelaunayTriang);
         }
 
         if (pointsChanged || newGeometryType != geometryType)
