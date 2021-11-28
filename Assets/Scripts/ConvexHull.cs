@@ -96,7 +96,7 @@ public static class ConvexHull
             var next = anglesWithPoints[keys[i]];
             var top = convexHull.Pop();
 
-            bool isLeft = IsLeftTurn(convexHull.Peek(), top, next);
+            bool isLeft = Utils.IsLeftTurn(convexHull.Peek(), top, next);
             if (isLeft)
             {
                 convexHull.Push(top);
@@ -106,13 +106,5 @@ public static class ConvexHull
         }
 
         return convexHull.ToList();
-    }
-
-    private static bool IsLeftTurn(Vector2 p1, Vector2 p2, Vector2 p3)
-    {
-        var v1 = p2 - p1;
-        var v2 = p3 - p1;
-        float res = v1.x * v2.y - v1.y * v2.x;
-        return res >= 0f;
     }
 }

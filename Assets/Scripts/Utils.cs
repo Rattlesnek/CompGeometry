@@ -17,6 +17,14 @@ public static class Utils
         return minY;
     }
 
+    public static bool IsLeftTurn(Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        var v1 = p2 - p1;
+        var v2 = p3 - p1;
+        float res = v1.x * v2.y - v1.y * v2.x;
+        return res >= 0f;
+    }
+
     public static (Vector2 center, float radius) CircumscribedCircle(HalfEdge edge, Vector2 point)
     {
         var v1 = point - edge.From;
@@ -45,6 +53,4 @@ public static class Utils
 
         return (center, radius);
     }
-
-
 }

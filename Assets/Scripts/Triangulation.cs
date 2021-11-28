@@ -114,7 +114,7 @@ public static class Triangulation
                 while (stack.Count != 0)
                 {
                     var tmp = stack.Pop();
-                    bool isLeftTurn = IsLeftTurn(lastLine.From, lastLine.To, tmp.Item1);
+                    bool isLeftTurn = Utils.IsLeftTurn(lastLine.From, lastLine.To, tmp.Item1);
                     if (current.Item2 && isLeftTurn ||
                         !current.Item2 && !isLeftTurn)
                     {
@@ -133,6 +133,14 @@ public static class Triangulation
             }
         }
 
+        stack.Pop();
+        var bottomPoint = sorted[sorted.Count - 1].Item1;
+        while (stack.Count != 1)
+        {
+            var tmp = stack.Pop();
+            diagonals.Add(new Line(bottomPoint, tmp.Item1));
+        }
+
         return diagonals;       
     }
 
@@ -146,13 +154,5 @@ public static class Triangulation
         {
             return list[list.Count - 1 - (Mathf.Abs(index) - 1) % list.Count];
         }
-    }
-
-    private static bool IsLeftTurn(Vector2 p1, Vector2 p2, Vector2 p3)
-    {
-        var v1 = p2 - p1;
-        var v2 = p3 - p1;
-        float res = v1.x * v2.y - v1.y * v2.x;
-        return res >= 0f;
     }
 }
