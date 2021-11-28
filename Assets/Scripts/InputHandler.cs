@@ -14,6 +14,7 @@ public enum GeometryType
     TriangPolygon,
     KDTree,
     DelaunayTriang,
+    VoronoiDiagram,
     Off
 }
 
@@ -99,7 +100,6 @@ public class InputHandler : MonoBehaviour
             newGeometryType = GeometryType.Off;
             pointsChanged = true;
         }
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             var maxSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
@@ -111,6 +111,10 @@ public class InputHandler : MonoBehaviour
                 points.Add(point);
             }
             pointsChanged = true;
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            newGeometryType = GeometryType.Off;
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -137,11 +141,15 @@ public class InputHandler : MonoBehaviour
         {
             newGeometryType = swapGeometryTypes(GeometryType.DelaunayTriang);
         }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            newGeometryType = swapGeometryTypes(GeometryType.VoronoiDiagram);
+        }
 
         if (pointsChanged || newGeometryType != geometryType)
         {
             geometryType = newGeometryType;
-            OnGeometryTypeChanged?.Invoke(new GeometrySelectorEventArgs(pointsChanged, geometryType));
+            OnGeometryTypeChanged?.Invoke(new GeometrySelectorEventArgs(geometryType));
         }
     }
 
@@ -185,13 +193,10 @@ public class InputHandler : MonoBehaviour
 
 public class GeometrySelectorEventArgs : EventArgs
 {
-    public bool PointsChanged { get; set; }
-
     public GeometryType GeometryType { get; set; }
 
-    public GeometrySelectorEventArgs(bool pointsChanged, GeometryType geometryType)
+    public GeometrySelectorEventArgs(GeometryType geometryType)
     {
-        PointsChanged = pointsChanged;
         GeometryType = geometryType;
     }
 }

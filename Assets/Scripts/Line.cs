@@ -13,10 +13,4 @@ public class Line
         From = from;
         To = to;
     }
-
-    public Line CreateTwin()
-    {
-        var twinLine = new Line(To, From);
-        return twinLine;
-    }
 }

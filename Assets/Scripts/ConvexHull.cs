@@ -13,7 +13,7 @@ public static class ConvexHull
             return availablePoints;
         }
 
-        var minY = FindMinY(availablePoints);
+        var minY = Utils.FindMinY(availablePoints);
         var curr = minY;
         var prev = minY + new Vector2(1f, 0f); // Auxiliary point
         var next = Vector2.zero; // Default value of the next point will be replaced because there must be more than 1 point
@@ -57,7 +57,7 @@ public static class ConvexHull
             return points.ToList();
         }
         
-        var minY = FindMinY(points);
+        var minY = Utils.FindMinY(points);
 
         var convexHull = new Stack<Vector2>();
         convexHull.Push(minY);
@@ -114,18 +114,5 @@ public static class ConvexHull
         var v2 = p3 - p1;
         float res = v1.x * v2.y - v1.y * v2.x;
         return res >= 0f;
-    }
-
-    private static Vector2 FindMinY(IEnumerable<Vector2> points)
-    {
-        var minY = points.First();
-        foreach (var point in points)
-        {
-            if (point.y < minY.y)
-            {
-                minY = point;
-            }
-        }
-        return minY;
     }
 }

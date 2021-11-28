@@ -13,70 +13,65 @@ public class LineHandler : MonoBehaviour
     private List<Transform> lineTransforms = new List<Transform>();
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         inputHandler.OnGeometryTypeChanged += OnGeometryTypeChanged;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     private void OnGeometryTypeChanged(GeometrySelectorEventArgs args)
     {
-        if (args.PointsChanged)
-        {
-            ClearAllLines();
-        }
-        
+        ClearAllLines();
+        var points = inputHandler.GetPoints();
+
         switch (args.GeometryType)
         {
             case GeometryType.GiftWraping:
-                var giftWrap = ConvexHull.GiftWrapping(inputHandler.GetPoints());
-                RenderLinesBtwPoints(giftWrap);
+                var giftWrap = ConvexHull.GiftWrapping(points);
+                RenderLinesBtwSuccessivePoints(giftWrap);
                 break;
 
             case GeometryType.GrahamScan:
-                var grahamScan = ConvexHull.GrahamScan(inputHandler.GetPoints());
-                RenderLinesBtwPoints(grahamScan);
+                var grahamScan = ConvexHull.GrahamScan(points);
+                RenderLinesBtwSuccessivePoints(grahamScan);
                 break;
 
             case GeometryType.Polygon:
-                RenderLinesBtwPoints(inputHandler.GetPoints());
+                RenderLinesBtwSuccessivePoints(points);
                 break;
 
             case GeometryType.TriangHull:
-                var hull = ConvexHull.GrahamScan(inputHandler.GetPoints());
-                RenderLinesBtwPoints(hull);
+                var hull = ConvexHull.GrahamScan(points);
+                RenderLinesBtwSuccessivePoints(hull);
                 var hullDiag = Triangulation.MonotonePolygonTriangulation(hull);
                 RenderLines(hullDiag);
                 break;
 
             case GeometryType.TriangPolygon:
-                var points = inputHandler.GetPoints();
-                RenderLinesBtwPoints(points);
+                RenderLinesBtwSuccessivePoints(points);
                 var polyDiag = Triangulation.MonotonePolygonTriangulation(points);
                 RenderLines(polyDiag);
                 break;
 
             case GeometryType.KDTree:
-                var tree = KDTree.BuildTree(inputHandler.GetPoints());
+                var tree = KDTree.BuildTree(points);
                 RenderKDTree(tree, new Vector2(-10, 10), new Vector2(10, -10));
                 break;
 
             case GeometryType.DelaunayTriang:
-                var delTriangLines = DelaunayTriangulation.Triangulate(inputHandler.GetPoints());
+                var delTriangLines = DelaunayTriangulation.TriangulateLines(points);
                 RenderLines(delTriangLines);
+                break;
+
+            case GeometryType.VoronoiDiagram:
+                var voronoiLines = VoronoiDiagram.GetLines(points);
+                RenderLines(voronoiLines);
                 break;
 
             case GeometryType.Off:
             default:
-                ClearAllLines();
                 break;
         }
     }
-
 
     private Transform CreateLine(Vector3 start, Vector3 end)
     {
@@ -95,7 +90,7 @@ public class LineHandler : MonoBehaviour
         }
     }
 
-    private void RenderLinesBtwPoints(IList<Vector2> points)
+    private void RenderLinesBtwSuccessivePoints(List<Vector2> points)
     {
         if (points.Count <= 1)
         {
@@ -118,7 +113,6 @@ public class LineHandler : MonoBehaviour
         {
             return;
         }
-
 
         if (tree.IsVertical)
         {
